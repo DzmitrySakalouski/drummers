@@ -87,6 +87,45 @@ sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
                 include: [models.Message],
             },
         );
+        await models.Topic.create(
+            {
+                name: 'Барахолка',
+                description: 'Здесь продают и покупают',
+                posts: [
+                    {
+                        name: 'Happy to release ...',
+                        description: 'Some description for this post'
+                    },
+                    {
+                        name: 'Happy to release ...',
+                        description: 'Some description for this post'
+                    },
+                ],
+            },
+            {
+                include: [models.Post],
+            },
+        );
+
+        await models.Topic.create(
+            {
+                name: 'Уроки',
+                description: 'Учимся и совершенствуем игру',
+                posts: [
+                    {
+                        name: 'Учимся и совершенствуем иг',
+                        description: 'Some description for this post. Учимся и совершенствуем иг'
+                    },
+                    {
+                        name: 'Bla bla bla',
+                        description: 'Some description for this post. Учимся и совершенствуем иг'
+                    },
+                ],
+            },
+            {
+                include: [models.Post],
+            },
+        );
     };
 
     if (eraseDatabaseOnSync) {

@@ -1,6 +1,8 @@
 import { gql } from 'apollo-server-express';
 import userSchema from './user';
 import messageSchema from './message';
+import postSchema from './post';
+import topicSchema from './topic';
 
 const linkSchema = gql`
   type Query {
@@ -13,4 +15,4 @@ const linkSchema = gql`
     _: Boolean
   }
 `;
-export default [linkSchema, userSchema, messageSchema];
+export default [linkSchema, userSchema, messageSchema, topicSchema, postSchema];
