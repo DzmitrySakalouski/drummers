@@ -1,18 +1,7 @@
-import React, { useEffect } from 'react';
-import { ActivityIndicator, View } from 'react-native';
-import { getToken } from '../services/token';
-
-export const Index = (props) => {
-    console.log(props);
-    useEffect(() => {
-        getToken().then(token => {
-            token ? props.navigation.navigate('App') : props.navigation.navigate('Auth');
-        });
-    }, []);
-
-    return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <ActivityIndicator/>
-        </View>
-    );
-}
+export * from './authLoading';
+export * from './followScreen';
+export * from './home';
+export * from './login';
+export * from './myPostsScreen';
+export * from './recentScreen';
+export * from './topicsScreen';
