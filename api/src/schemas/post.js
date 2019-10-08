@@ -15,5 +15,6 @@ export default gql`
     userId: String!
     createdAt: String!
     topicId: String!
+    user: User!
   }
 `;

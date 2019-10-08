@@ -30,4 +30,10 @@ export default {
             return await models.Post.destroy({ where: { id } });
         },
     },
+
+    Post: {
+        user: async (post, args, { models }) => {
+            return await models.User.findByPk(post.userId);
+        },
+    }
 }

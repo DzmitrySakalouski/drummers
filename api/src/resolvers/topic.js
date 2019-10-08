@@ -25,4 +25,22 @@ export default {
             return await models.Topic.destroy({ where: { id } });
         },
     },
+    Topic: {
+        posts: async (topic, args, { models }) => {
+            return await models.Post.findAll({
+                where: {
+                    topicId: topic.id
+                }
+            })
+        },
+        postsForCard: async (topic, args, { models }) => {
+            return await models.Post.findAll({
+                where: {
+                    topicId: topic.id,
+                },
+                limit: 3,
+                order: [['createdAt', 'DESC']]
+            })
+        }
+    }
 }

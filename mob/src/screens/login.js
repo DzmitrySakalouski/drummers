@@ -5,7 +5,7 @@ import {
     TextInput,
     ImageBackground,
 } from 'react-native';
-import { Input, Button, Text } from 'react-native-elements';
+import { Button, Text } from 'react-native-elements';
 import { gql } from "apollo-boost";
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import { setToken } from '../services/token';

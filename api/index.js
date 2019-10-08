@@ -94,11 +94,33 @@ sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
                 posts: [
                     {
                         name: 'Happy to release ...',
-                        description: 'Some description for this post'
+                        description: 'Some description for this post',
+                        userId: 1,
                     },
                     {
-                        name: 'Happy to release ...',
-                        description: 'Some description for this post'
+                        name: '1Happy to release ...',
+                        description: 'Some description for this post',
+                        userId: 1,
+                    },
+                    {
+                        name: '2Happy to release ...',
+                        description: 'Some description for this post',
+                        userId: 1,
+                    },
+                    {
+                        name: '3Happy to release ...',
+                        description: 'Some description for this post',
+                        userId: 1,
+                    },
+                    {
+                        name: '4Happy to release ...',
+                        description: 'Some description for this post',
+                        userId: 1,
+                    },
+                    {
+                        name: '5Happy to release ...',
+                        description: 'Some description for this post',
+                        userId: 1,
                     },
                 ],
             },
@@ -113,12 +135,34 @@ sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
                 description: 'Учимся и совершенствуем игру',
                 posts: [
                     {
-                        name: 'Учимся и совершенствуем иг',
+                        name: 'Учимся и совершенствуем иг1',
+                        userId: 2,
                         description: 'Some description for this post. Учимся и совершенствуем иг'
                     },
                     {
-                        name: 'Bla bla bla',
+                        name: 'Bla bla bla1',
+                        userId: 2,
                         description: 'Some description for this post. Учимся и совершенствуем иг'
+                    },
+                    {
+                        name: 'Учимся и совершенствуем иг2',
+                        userId: 2,
+                        description: 'Some description for this post. Учимся и совершенствуем иг'
+                    },
+                    {
+                        name: 'Bla bla bla3',
+                        userId: 2,
+                        description: 'Some description for this post. Учимся и совершенствуем иг'
+                    },
+                    {
+                        name: 'Учимся и совершенствуем иг34',
+                        userId: 2,
+                        description: 'Some description for this post. Учимся и совершенствуем иг'
+                    },
+                    {
+                        name: 'Bla bla bla42',
+                        userId: 2,
+                        description: 'JKHKJ kjhKjhj kjkjkJkjk jSome description for this post. Учимся и совершенствуем иг'
                     },
                 ],
             },

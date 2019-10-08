@@ -18,6 +18,9 @@ const post = (sequelize, DataTypes) => {
                 },
             },
         },
+        userId: {
+            type: DataTypes.STRING,
+        }
     });
 
     Post.associate = models => {
