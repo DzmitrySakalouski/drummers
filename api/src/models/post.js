@@ -20,11 +20,12 @@ const post = (sequelize, DataTypes) => {
         },
         userId: {
             type: DataTypes.STRING,
-        }
+        },
     });
 
     Post.associate = models => {
         Post.belongsTo(models.Topic);
+        Post.hasMany(models.Image);
     };
     return Post;
 };

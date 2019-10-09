@@ -14,31 +14,25 @@ const SIGN_IN = gql`
 mutation signInApp($login: String!, $password: String!){
     signIn(login: $login, password: $password) {
         token
+        id
     }
 }
 `;
 
-const GET_MESSAGES = gql`
-{
-    messages {
-      id,
-      text
-    }
-  }
-`;
-
 export default function LoginScreen(props) {
-    console.log(props);
     const [login, setLogin] = useState('admin123');
     const [signIn] = useMutation(SIGN_IN);
     const [password, setPassword] = useState('admin123');
-    const { loading, error, data: messages } = useQuery(GET_MESSAGES);
 
     const submitLoginCredentials = async () => {
         const { data } = await signIn({ variables: { login, password } });
-        console.log(data);
+
+        const params = {
+            token: data.signIn.token,
+            id: data.signIn.id
+        }
         
-        setToken(data.signIn.token).then(() => props.navigation.navigate('Home'));
+        setToken(params).then(() => props.navigation.navigate('Home'));
     }
 
     return (

@@ -4,11 +4,9 @@ import { ListItem, Text } from 'react-native-elements';
 
 export function TopicCardPosts(props) {
     const { posts=[] } = props;
-    console.log(posts);
 
     const getDateFromMiliseconds = seconds => {
         const date = new Date(parseInt(seconds));
-        console.log('date => ', date)
         return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()} - ${date.getHours()}:${date.getMinutes()}`;
     }
 

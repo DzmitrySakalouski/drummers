@@ -4,6 +4,11 @@ import { Card, Text, Button, Icon } from 'react-native-elements';
 import { TopicCardPosts } from './topicCardPosts';
 
 export function TopicCard(props) {
+    const handleAddNewPost = () => {
+        const { id } = props;
+        props.openAddPostForm(id)
+    }
+
     const renderTitle = () => {
         return (
             <View style={styles.customTitle}>
@@ -12,7 +17,8 @@ export function TopicCard(props) {
                     containerStyle={styles.titleItem}
                     name="note-add"
                     color="black"
-                    size={40} />
+                    size={40}
+                    onPress={handleAddNewPost} />
             </View>
         );
     }

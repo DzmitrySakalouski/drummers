@@ -15,6 +15,7 @@ export default gql`
   }
   type Token {
     token: String!
+    id: String!
   }
   type User {
     id: ID!

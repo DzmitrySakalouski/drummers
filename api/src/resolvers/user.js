@@ -1,5 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { AuthenticationError, UserInputError } from 'apollo-server';
+import { isAuthenticated } from './authorization';
+import { combineResolvers } from 'graphql-resolvers';
 
 const createToken = async (user, secret, expiresIn) => {
     const { id, email, username } = user;
@@ -12,7 +14,11 @@ export default {
             return await models.User.findAll();
         },
         user: async (parent, { id }, { models }) => {
-            return await models.User.findByPk(id);
+            try {
+                return await models.User.findByPk(id);
+            } catch (error) {
+                throw new Error(error);
+            }
         },
         me: async (parent, args, { models, me }) => {
             if (!me) {
@@ -49,7 +55,7 @@ export default {
             if (!isValid) {
                 throw new AuthenticationError('Invalid password.');
             }
-            return { token: createToken(user, secret, '30m') };
+            return { token: createToken(user, secret, '30m'), id: user.id };
         },
     },
     User: {

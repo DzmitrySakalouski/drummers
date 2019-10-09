@@ -170,6 +170,11 @@ sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
                 include: [models.Post],
             },
         );
+
+        await models.Image.create({
+            url: 'https://picsum.photos/200',
+            postId: 4,
+        });
     };
 
     if (eraseDatabaseOnSync) {

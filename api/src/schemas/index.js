@@ -3,6 +3,7 @@ import userSchema from './user';
 import messageSchema from './message';
 import postSchema from './post';
 import topicSchema from './topic';
+import imageSchema from './image';
 
 const linkSchema = gql`
   type Query {
@@ -15,4 +16,11 @@ const linkSchema = gql`
     _: Boolean
   }
 `;
-export default [linkSchema, userSchema, messageSchema, topicSchema, postSchema];
+export default [
+  linkSchema,
+  userSchema,
+  messageSchema,
+  topicSchema,
+  postSchema,
+  imageSchema
+];

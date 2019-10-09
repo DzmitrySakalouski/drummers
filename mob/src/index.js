@@ -4,6 +4,7 @@ import LoginScreen from './screens/login';
 import { HomeScreen } from './screens/home';
 import { Index } from './screens/authLoading';
 import { HomeHeader } from './components/homeHeader';
+import { AddPostScreen } from './screens/addPostScreen';
 
 const AppStack = createStackNavigator({
     Home: {
@@ -12,6 +13,9 @@ const AppStack = createStackNavigator({
             header: HomeHeader
         }
     },
+    AddPostForm: {
+        screen: AddPostScreen
+    }
 });
 const AuthStack = createStackNavigator({ 
     SignIn: {

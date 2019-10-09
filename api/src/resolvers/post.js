@@ -13,13 +13,24 @@ export default {
     },
 
     Mutation: {
-        createPost: async (parent, { name, description, topicId }, { models }) => {
+        createPost: async (parent, { name, description, userId, topicId, urls }, { models }) => {
             try {
-                return await models.Post.create({
+                const post = await models.Post.create({
                     name,
                     description,
                     topicId,
+                    userId,
                 });
+                const runImgCreation = () => {
+                    Promise.all(
+                        urls.map(async image => {
+                            await models.Image.create({ url: image, postId: post.id });
+                        })
+                    );
+                }
+
+                runImgCreation();
+                return 'Done';                
             } catch (error) {
                 throw new Error(error);
             }
@@ -34,6 +45,13 @@ export default {
     Post: {
         user: async (post, args, { models }) => {
             return await models.User.findByPk(post.userId);
+        },
+        images: async (post, args, { models }) => {
+            return await models.Image.findAll({
+                where: {
+                    postId: post.id,
+                },
+            });
         },
     }
 }

@@ -21,13 +21,17 @@ const GET_TOPICS = gql`
 }
 `;
 
-export function TopicsScreen() {
+export function TopicsScreen(props) {
     const { loading, error, data = [] } = useQuery(GET_TOPICS);
-    console.log(data);
+    
+    const openAddPostForm = id => {
+        props.navigation.navigate('AddPostForm', { topicId: id, userId: props.userId });
+    }
+
     return (
         <View>
             {
-                data && data.topics && data.topics.map((item, i) => <TopicCard key={i.toString()} {...item} />)
+                data && data.topics && data.topics.map((item, i) => <TopicCard openAddPostForm={openAddPostForm} key={i.toString()} {...item} />)
             }
         </View>
     );

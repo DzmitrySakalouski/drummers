@@ -1,12 +1,14 @@
 import React, { useEffect } from 'react';
 import { ActivityIndicator, View } from 'react-native';
-import { getToken } from '../services/token';
+import { getUserToken } from '../services/token';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export const Index = (props) => {
-    console.log(props);
+    // AsyncStorage.removeItem('token')
+    // AsyncStorage.removeItem('userId')
     useEffect(() => {
-        getToken().then(token => {
-            token ? props.navigation.navigate('App') : props.navigation.navigate('Auth');
+        getUserToken().then(userData => {
+            userData.token && userData.id ? props.navigation.navigate('App', { userData }) : props.navigation.navigate('Auth');
         });
     }, []);
 
