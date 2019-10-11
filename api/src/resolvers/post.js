@@ -21,6 +21,7 @@ export default {
                     topicId,
                     userId,
                 });
+                console.log('post =>', post.id);
                 const runImgCreation = () => {
                     Promise.all(
                         urls.map(async image => {
@@ -30,9 +31,10 @@ export default {
                 }
 
                 runImgCreation();
-                return 'Done';                
+                return {msg: 'Done'};                
             } catch (error) {
-                throw new Error(error);
+                console.log(error);
+                return error;
             }
         },
 

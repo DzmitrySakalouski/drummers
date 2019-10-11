@@ -3,6 +3,17 @@ import { ScrollView, StyleSheet, View, Dimensions, Image } from 'react-native';
 import { Text, Input, Button, CheckBox, Overlay, Icon } from 'react-native-elements';
 import { AddImgPopup } from '../components/addImgPopup';
 
+import { gql } from "apollo-boost";
+import { useMutation } from '@apollo/react-hooks';
+
+const ADD_POST = gql`
+mutation addPost($name: String!, $description: String!, $topicId: String!, $userId: String!, $urls: [String!]!){
+    createPost(name: $name, description: $description, topicId: $topicId, userId: $userId, urls: $urls) {
+        msg
+    }
+}
+`;
+
 export function AddPostScreen(props) {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
@@ -10,12 +21,21 @@ export function AddPostScreen(props) {
     const [price, setPrice] = useState('');
     const [images, setImages] = useState([]);
     const [popupOpen, setPopupOpen] = useState(false);
+    const [addPost, { data }] = useMutation(ADD_POST);
+
+    console.log('data => ', data);    
 
     const renderImages = img => {
         return (
             <Text>{img}</Text>
         )
     };
+
+    const submitPost = () => {
+        const { topicId, userId } = props.navigation.getParam('data');;
+        console.log({ name, description, topicId, userId, urls: images })
+        addPost({ variables: { name: name, description: description, topicId: topicId, userId: userId, urls: images }}).then(() => props.navigation.goBack()).catch(err => console.log({err}));
+    }
 
     const togglePopup = () => {
         setPopupOpen(!popupOpen);
@@ -58,7 +78,7 @@ export function AddPostScreen(props) {
                 onPress={() => setChaffer(!chaffer)}
             />
             <Button onPress={togglePopup} title="Добавить ссылки на фото" type="outline" containerStyle={styles.formItem} />
-            <Button title="Опубликовать" containerStyle={styles.formItem} />
+            <Button title="Опубликовать" containerStyle={styles.formItem} onPress={submitPost} />
         </ScrollView>
     );
 }

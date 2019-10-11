@@ -25,7 +25,8 @@ export function TopicsScreen(props) {
     const { loading, error, data = [] } = useQuery(GET_TOPICS);
     
     const openAddPostForm = id => {
-        props.navigation.navigate('AddPostForm', { topicId: id, userId: props.userId });
+        const data = { topicId: id, userId: props.userId }
+        props.navigation.navigate('AddPostForm', {data});
     }
 
     return (
