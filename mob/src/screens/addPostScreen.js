@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ScrollView, StyleSheet, View, Dimensions, Image } from 'react-native';
 import { Text, Input, Button, CheckBox, Overlay, Icon } from 'react-native-elements';
 import { AddImgPopup } from '../components/addImgPopup';
+import ImagePicker from 'react-native-image-picker';
 
 import { gql } from "apollo-boost";
 import { useMutation } from '@apollo/react-hooks';
@@ -22,8 +23,9 @@ export function AddPostScreen(props) {
     const [images, setImages] = useState([]);
     const [popupOpen, setPopupOpen] = useState(false);
     const [addPost, { data }] = useMutation(ADD_POST);
+    const [source, setSource] = useState(null);
 
-    console.log('data => ', data);    
+    console.log('data => ', data);
 
     const renderImages = img => {
         return (
@@ -34,11 +36,36 @@ export function AddPostScreen(props) {
     const submitPost = () => {
         const { topicId, userId } = props.navigation.getParam('data');;
         console.log({ name, description, topicId, userId, urls: images })
-        addPost({ variables: { name: name, description: description, topicId: topicId, userId: userId, urls: images }}).then(() => props.navigation.goBack()).catch(err => console.log({err}));
+        addPost({ variables: { name: name, description: description, topicId: topicId, userId: userId, urls: images } }).then(() => props.navigation.goBack()).catch(err => console.log({ err }));
     }
 
     const togglePopup = () => {
-        setPopupOpen(!popupOpen);
+        const options = {
+            title: 'Select Avatar',
+            customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
+            storageOptions: {
+                skipBackup: true,
+                path: 'images',
+            },
+        };
+        ImagePicker.showImagePicker(options, (response) => {
+            console.log('Response = ', response);
+
+            if (response.didCancel) {
+                console.log(response);
+            } else if (response.error) {
+                console.log('ImagePicker Error: ', response.error);
+            } else if (response.customButton) {
+                console.log('User tapped custom button: ', response.customButton);
+            } else {
+                const source = { uri: response.uri };
+
+                // You can also display the image using data:
+                // const source = { uri: 'data:image/jpeg;base64,' + response.data };
+                console.log(source);
+                setSource(source)
+            }
+        });
     }
 
     const handleLinksSave = link => {
@@ -48,7 +75,6 @@ export function AddPostScreen(props) {
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            <Text>Добавить новый пост</Text>
             {
                 popupOpen && (
                     <Overlay
@@ -56,8 +82,9 @@ export function AddPostScreen(props) {
                         width={350}
                         height="auto">
                         <View>
-                            <Text>Hello from Overlay!</Text>
-                            <Icon name="close" onPress={togglePopup} />
+                            <View style={{ flex: 0, justifyContent: 'flex-end', alignItems: 'center' }}>
+                                <Icon name="close" onPress={togglePopup} />
+                            </View>
                             <AddImgPopup onLinksSave={handleLinksSave} />
                         </View>
                     </Overlay>

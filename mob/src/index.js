@@ -14,7 +14,10 @@ const AppStack = createStackNavigator({
         }
     },
     AddPostForm: {
-        screen: AddPostScreen
+        screen: AddPostScreen,
+        navigationOptions: {
+            title: 'Создать пост',
+        }
     }
 });
 const AuthStack = createStackNavigator({ 

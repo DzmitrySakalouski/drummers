@@ -19,18 +19,41 @@ mutation signInApp($login: String!, $password: String!){
 }
 `;
 
+const GET_TOPICS = gql`
+{
+    topics {
+        id
+        name
+        description
+        postsForCard {
+            name
+            createdAt
+            user {
+                username
+            }
+        }
+    }
+}
+`;
+
 export default function LoginScreen(props) {
     const [login, setLogin] = useState('admin123');
     const [signIn] = useMutation(SIGN_IN);
     const [password, setPassword] = useState('admin123');
+    const { loading, error, data = [] } = useQuery(GET_TOPICS);
+    console.log('data', {data}, error);
+    
 
     const submitLoginCredentials = async () => {
         const { data } = await signIn({ variables: { login, password } });
+        // signIn({ variables: { login, password } }).then(res => console.log(res)).catch(err => console.log({ err }));
 
         const params = {
             token: data.signIn.token,
             id: data.signIn.id
         }
+
+        // props.navigation.navigate('Home')
         
         setToken(params).then(() => props.navigation.navigate('Home'));
     }

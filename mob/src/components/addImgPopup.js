@@ -9,10 +9,10 @@ export function AddImgPopup(props) {
     }
 
     return (
-        <View>
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
             <Image source={img && {uri: img}} height={200} width={200}/>
-            <View>
-                <Input value={img} onChangeText={text => setImg(text)} />
+            <View style={{ marginVertical: 20 }}>
+                <Input label="Скопируйте ссылку" value={img} onChangeText={text => setImg(text)} />
             </View>
             <Button title="Добавить ссылки" onPress={handleLinksSave}/>
         </View>
