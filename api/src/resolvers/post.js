@@ -13,13 +13,19 @@ export default {
     },
 
     Mutation: {
-        createPost: async (parent, { name, description, userId, topicId }, { models }) => {
+        createPost: async (parent, { name, description, userId, topicId, files }, { models }) => {
             try {
-                await models.Post.create({
+                const post = await models.Post.create({
                     name,
                     description,
                     topicId,
                     userId,
+                });
+
+                files.forEach(async (file) => {
+                    await models.Image.create({
+                        file, postId: post.id
+                    });
                 });
 
                 return {msg: 'Done'};                

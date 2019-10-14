@@ -1,8 +1,10 @@
 export default {
     Mutation: {
-        addImage: async (parent, { file, postId }, { models }) => {
-            await models.Image.create({
-                file, postId
+        addImage: async (parent, { files, postId }, { models }) => {
+            files.forEach(async (file) => {
+                await models.Image.create({
+                    file, postId
+                });
             });
 
             return 'Done';

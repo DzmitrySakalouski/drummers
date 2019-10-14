@@ -8,24 +8,10 @@ import { gql } from "apollo-boost";
 import { useMutation } from '@apollo/react-hooks';
 
 const ADD_POST = gql`
-mutation addPost($name: String!, $description: String!, $topicId: String!, $userId: String!){
-    createPost(name: $name, description: $description, topicId: $topicId, userId: $userId) {
+mutation addPost($name: String!, $description: String!, $topicId: String!, $userId: String!, $files: [Upload!]!){
+    createPost(name: $name, description: $description, topicId: $topicId, userId: $userId, files: $files) {
         msg
     }
-}
-`;
-
-const CREATE_EMPTY_POST = gql`
-mutation addEmptyPost($topicId: String!, $userId: String!){
-    createEmptyPost(topicId: $topicId, userId: $userId) {
-        id
-    }
-}
-`;
-
-const ADD_IMG = gql`
-mutation addImage($file: Upload!, $postId: String!){
-    addImage(file: $file, postId: $postId)
 }
 `;
 
@@ -36,16 +22,8 @@ export function AddPostScreen(props) {
     const [price, setPrice] = useState('');
     const [images, setImages] = useState([]);
     const [addPost, { data: addPostData }] = useMutation(ADD_POST);
-    const [addImg, { data: addImgData }] = useMutation(ADD_IMG);
-    const [createEmptyPost, { data: idData }] = useMutation(CREATE_EMPTY_POST);
-
-    useEffect(async () => {
-        const { topicId, userId } = props.navigation.getParam('data');
-        await createEmptyPost({ variables: { topicId: topicId, userId: userId } });
-    }, []);
 
     const renderImages = (img, i) => {
-        console.log(img);
         return (
             <Image key={i.toString()} style={{ height: 150, width: 150, marginRight: 10 }} source={{ uri: img.source.uri }} />
         )
@@ -53,8 +31,9 @@ export function AddPostScreen(props) {
 
     const submitPost = () => {
         const { topicId, userId } = props.navigation.getParam('data');
-        console.log({ name, description, topicId, userId, urls: images })
-        addPost({ variables: { name: name, description: description, topicId: topicId, userId: userId } }).then(() => props.navigation.goBack()).catch(err => console.log({ err }));
+        const files = images.map(item => item.file);
+        // addImg({ variables: files, postId: idData.createEmptyPost.id })
+        addPost({ variables: { name: name, description: description, topicId: topicId, userId: userId, files } }).then(() => props.navigation.goBack()).catch(err => console.log({ err }));
     }
 
     const togglePopup = () => {
