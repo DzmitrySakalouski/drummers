@@ -5,8 +5,12 @@ export default gql`
     postsByTopicId(id: ID!): [Post!]!
   }
   extend type Mutation {
-    createPost(name: String!, description: String!, topicId: String!, userId: String!, urls: [String!]!): Answer!
+    createPost(name: String!, description: String!, topicId: String!, userId: String!): Answer!
+    createEmptyPost(topicId: String!, userId: String!): Id!
     deletePost(id: ID!): Boolean!
+  }
+  type Id {
+    id: String!
   }
   type Post {
     id: ID!

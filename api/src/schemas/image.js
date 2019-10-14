@@ -1,12 +1,12 @@
 import { gql } from 'apollo-server-express';
 export default gql`
   type Image {
-    url: String!
+    file: String!
     postId: String!
   }
   extend type Mutation {
     addImage(
-        url: String!
+        file: Upload
         postId: String!
     ): String!
   }

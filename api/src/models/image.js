@@ -1,7 +1,7 @@
 const image = (sequelize, DataTypes) => {
     const Image = sequelize.define('image', {
-        url: {
-            type: DataTypes.STRING,
+        file: {
+            type: DataTypes.BLOB,
         },
     });
 

@@ -1,17 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ScrollView, StyleSheet, View, Dimensions, Image } from 'react-native';
-import { Text, Input, Button, CheckBox, Overlay, Icon } from 'react-native-elements';
-import { AddImgPopup } from '../components/addImgPopup';
+import { Text, Input, Button, CheckBox, Icon } from 'react-native-elements';
 import ImagePicker from 'react-native-image-picker';
+import { ReactNativeFile } from 'apollo-upload-client';
 
 import { gql } from "apollo-boost";
 import { useMutation } from '@apollo/react-hooks';
 
 const ADD_POST = gql`
-mutation addPost($name: String!, $description: String!, $topicId: String!, $userId: String!, $urls: [String!]!){
-    createPost(name: $name, description: $description, topicId: $topicId, userId: $userId, urls: $urls) {
+mutation addPost($name: String!, $description: String!, $topicId: String!, $userId: String!){
+    createPost(name: $name, description: $description, topicId: $topicId, userId: $userId) {
         msg
     }
+}
+`;
+
+const CREATE_EMPTY_POST = gql`
+mutation addEmptyPost($topicId: String!, $userId: String!){
+    createEmptyPost(topicId: $topicId, userId: $userId) {
+        id
+    }
+}
+`;
+
+const ADD_IMG = gql`
+mutation addImage($file: Upload!, $postId: String!){
+    addImage(file: $file, postId: $postId)
 }
 `;
 
@@ -21,22 +35,26 @@ export function AddPostScreen(props) {
     const [chaffer, setChaffer] = useState(false);
     const [price, setPrice] = useState('');
     const [images, setImages] = useState([]);
-    const [popupOpen, setPopupOpen] = useState(false);
-    const [addPost, { data }] = useMutation(ADD_POST);
-    const [source, setSource] = useState(null);
+    const [addPost, { data: addPostData }] = useMutation(ADD_POST);
+    const [addImg, { data: addImgData }] = useMutation(ADD_IMG);
+    const [createEmptyPost, { data: idData }] = useMutation(CREATE_EMPTY_POST);
 
-    console.log('data => ', data);
+    useEffect(async () => {
+        const { topicId, userId } = props.navigation.getParam('data');
+        await createEmptyPost({ variables: { topicId: topicId, userId: userId } });
+    }, []);
 
-    const renderImages = img => {
+    const renderImages = (img, i) => {
+        console.log(img);
         return (
-            <Text>{img}</Text>
+            <Image key={i.toString()} style={{ height: 150, width: 150, marginRight: 10 }} source={{ uri: img.source.uri }} />
         )
     };
 
     const submitPost = () => {
-        const { topicId, userId } = props.navigation.getParam('data');;
+        const { topicId, userId } = props.navigation.getParam('data');
         console.log({ name, description, topicId, userId, urls: images })
-        addPost({ variables: { name: name, description: description, topicId: topicId, userId: userId, urls: images } }).then(() => props.navigation.goBack()).catch(err => console.log({ err }));
+        addPost({ variables: { name: name, description: description, topicId: topicId, userId: userId } }).then(() => props.navigation.goBack()).catch(err => console.log({ err }));
     }
 
     const togglePopup = () => {
@@ -48,53 +66,33 @@ export function AddPostScreen(props) {
                 path: 'images',
             },
         };
-        ImagePicker.showImagePicker(options, (response) => {
-            console.log('Response = ', response);
-
-            if (response.didCancel) {
-                console.log(response);
-            } else if (response.error) {
+        ImagePicker.showImagePicker(options, async (response) => {
+            if (response.error) {
                 console.log('ImagePicker Error: ', response.error);
-            } else if (response.customButton) {
-                console.log('User tapped custom button: ', response.customButton);
             } else {
-                const source = { uri: response.uri };
+                const file = new ReactNativeFile({
+                    uri: response.uri,
+                    name: response.fileName,
+                    type: response.type
+                });
+                const source = { uri: 'data:image/jpeg;base64,' + response.data };
 
-                // You can also display the image using data:
-                // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-                console.log(source);
-                setSource(source)
+                setImages([...images, {
+                    source,
+                    file
+                }]);
+                // await addImg({ variables: { file, postId: idData.createEmptyPost.id }})
             }
         });
-    }
-
-    const handleLinksSave = link => {
-        setImages([...images, link]);
-        togglePopup();
-    }
+    };
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            {
-                popupOpen && (
-                    <Overlay
-                        isVisible
-                        width={350}
-                        height="auto">
-                        <View>
-                            <View style={{ flex: 0, justifyContent: 'flex-end', alignItems: 'center' }}>
-                                <Icon name="close" onPress={togglePopup} />
-                            </View>
-                            <AddImgPopup onLinksSave={handleLinksSave} />
-                        </View>
-                    </Overlay>
-                )
-            }
-            <View style={styles.formItem}>
+            <ScrollView horizontal contentContainerStyle={{ minWidth: '100%', height: images && images.length ? 200 : 50, flex: 0, justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'row' }}>
                 {
-                    images && images.length ? images.map(uri => renderImages(uri)) : <Text>Фотографий нет</Text>
+                    images && images.length ? images.map((img, i) => renderImages(img, i)) : <Text>Фотографий нет</Text>
                 }
-            </View>
+            </ScrollView>
             <Input placeholder="Заголовок" containerStyle={styles.formItem} value={name} onChangeText={text => setName(text)} />
             <Input placeholder="Описание" containerStyle={styles.formItem} multiline numberOfLines={4} value={description} onChangeText={text => setDescription(text)} />
             <Input placeholder="Цена" containerStyle={styles.formItem} value={price} onChangeText={text => setPrice(text)} />
@@ -112,7 +110,7 @@ export function AddPostScreen(props) {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flex: 0,
         alignItems: 'center'
     },
     formItem: {

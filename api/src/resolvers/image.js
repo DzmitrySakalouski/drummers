@@ -1,8 +1,8 @@
 export default {
     Mutation: {
-        addImage: async (parent, { url, postId }, { models }) => {
+        addImage: async (parent, { file, postId }, { models }) => {
             await models.Image.create({
-                url, postId
+                file, postId
             });
 
             return 'Done';

@@ -13,24 +13,15 @@ export default {
     },
 
     Mutation: {
-        createPost: async (parent, { name, description, userId, topicId, urls }, { models }) => {
+        createPost: async (parent, { name, description, userId, topicId }, { models }) => {
             try {
-                const post = await models.Post.create({
+                await models.Post.create({
                     name,
                     description,
                     topicId,
                     userId,
                 });
-                console.log('post =>', post.id);
-                const runImgCreation = () => {
-                    Promise.all(
-                        urls.map(async image => {
-                            await models.Image.create({ url: image, postId: post.id });
-                        })
-                    );
-                }
 
-                runImgCreation();
                 return {msg: 'Done'};                
             } catch (error) {
                 console.log(error);
@@ -38,7 +29,21 @@ export default {
             }
         },
 
+        createEmptyPost: async (parent, { userId, topicId }, { models }) => {
+            try {
+                const post = await models.Post.create({
+                    name: '',
+                    description: '',
+                    topicId,
+                    userId,
+                });
 
+                return {id: post.id};                
+            } catch (error) {
+                console.log(error);
+                return error;
+            }
+        }, 
         deletePost: async (parent, { id }, { models }) => {
             return await models.Post.destroy({ where: { id } });
         },
