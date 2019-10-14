@@ -13,13 +13,15 @@ export default {
     },
 
     Mutation: {
-        createPost: async (parent, { name, description, userId, topicId, files }, { models }) => {
+        createPost: async (parent, { name, description, userId, topicId, files, price, isChaffer }, { models }) => {
             try {
                 const post = await models.Post.create({
                     name,
                     description,
                     topicId,
                     userId,
+                    price,
+                    isChaffer,
                 });
 
                 files.forEach(async (file) => {

@@ -18,6 +18,12 @@ const post = (sequelize, DataTypes) => {
             //     },
             // },
         },
+        price: {
+            type: DataTypes.STRING,
+        },
+        isChaffer: {
+            type: DataTypes.BOOLEAN,
+        },
         userId: {
             type: DataTypes.STRING,
         },

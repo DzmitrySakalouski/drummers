@@ -8,8 +8,8 @@ import { gql } from "apollo-boost";
 import { useMutation } from '@apollo/react-hooks';
 
 const ADD_POST = gql`
-mutation addPost($name: String!, $description: String!, $topicId: String!, $userId: String!, $files: [Upload!]!){
-    createPost(name: $name, description: $description, topicId: $topicId, userId: $userId, files: $files) {
+mutation addPost($name: String!, $description: String!, $topicId: String!, $userId: String!, $files: [Upload!], $price: String, $isChaffer: Boolean){
+    createPost(name: $name, description: $description, topicId: $topicId, userId: $userId, files: $files, price: $price, isChaffer: $isChaffer) {
         msg
     }
 }
@@ -22,6 +22,7 @@ export function AddPostScreen(props) {
     const [price, setPrice] = useState('');
     const [images, setImages] = useState([]);
     const [addPost, { data: addPostData }] = useMutation(ADD_POST);
+    const { topicId, userId, isAd } = props.navigation.getParam('data');
 
     const renderImages = (img, i) => {
         return (
@@ -30,10 +31,16 @@ export function AddPostScreen(props) {
     };
 
     const submitPost = () => {
-        const { topicId, userId } = props.navigation.getParam('data');
         const files = images.map(item => item.file);
-        // addImg({ variables: files, postId: idData.createEmptyPost.id })
-        addPost({ variables: { name: name, description: description, topicId: topicId, userId: userId, files } }).then(() => props.navigation.goBack()).catch(err => console.log({ err }));
+        addPost({ variables: {
+            name,
+            description,
+            topicId,
+            userId,
+            files,
+            price,
+            isChaffer: chaffer
+        } }).then(() => props.navigation.navigate('Home', {foo: 'bar'})).catch(err => console.log({ err }));
     }
 
     const togglePopup = () => {
@@ -60,7 +67,6 @@ export function AddPostScreen(props) {
                     source,
                     file
                 }]);
-                // await addImg({ variables: { file, postId: idData.createEmptyPost.id }})
             }
         });
     };
@@ -74,13 +80,19 @@ export function AddPostScreen(props) {
             </ScrollView>
             <Input placeholder="Заголовок" containerStyle={styles.formItem} value={name} onChangeText={text => setName(text)} />
             <Input placeholder="Описание" containerStyle={styles.formItem} multiline numberOfLines={4} value={description} onChangeText={text => setDescription(text)} />
-            <Input placeholder="Цена" containerStyle={styles.formItem} value={price} onChangeText={text => setPrice(text)} />
-            <CheckBox
-                title='Торг'
-                containerStyle={styles.formItem}
-                checked={chaffer}
-                onPress={() => setChaffer(!chaffer)}
-            />
+            {
+                isAd && 
+                <>
+                    <Input placeholder="Цена" containerStyle={styles.formItem} value={price} onChangeText={text => setPrice(text)} />
+                    <CheckBox
+                        title='Торг'
+                        containerStyle={styles.formItem}
+                        checked={chaffer}
+                        onPress={() => setChaffer(!chaffer)}
+                    />
+                </>
+            }
+
             <Button onPress={togglePopup} title="Добавить ссылки на фото" type="outline" containerStyle={styles.formItem} />
             <Button title="Опубликовать" containerStyle={styles.formItem} onPress={submitPost} />
         </ScrollView>

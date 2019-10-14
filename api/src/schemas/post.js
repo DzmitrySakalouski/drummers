@@ -5,7 +5,7 @@ export default gql`
     postsByTopicId(id: ID!): [Post!]!
   }
   extend type Mutation {
-    createPost(name: String!, description: String!, topicId: String!, userId: String!, files: [Upload!]!): Answer!
+    createPost(name: String!, description: String!, topicId: String!, userId: String!, files: [Upload!], price: String, isChaffer: Boolean): Answer!
     createEmptyPost(topicId: String!, userId: String!): Id!
     deletePost(id: ID!): Boolean!
   }
@@ -21,6 +21,8 @@ export default gql`
     topicId: String!
     user: User!
     images: [Image!]
+    price: String
+    isChaffer: Boolean
   }
   type Answer {
     msg: String!
