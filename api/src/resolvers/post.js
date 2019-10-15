@@ -10,6 +10,9 @@ export default {
                 }
             });
         },
+        post: async (parent, { id }, { models }) => {
+            return await models.Post.findByPk(id);
+        }
     },
 
     Mutation: {
@@ -61,12 +64,21 @@ export default {
         user: async (post, args, { models }) => {
             return await models.User.findByPk(post.userId);
         },
-        images: async (post, args, { models }) => {
-            return await models.Image.findAll({
+        imageData: async (post, args, { models }) => {
+            console.log('+++++++++ images +++++++++');
+            const images = await models.Image.findAll({
                 where: {
                     postId: post.id,
                 },
             });
+
+            const imageData = images.map(item => {
+                return {
+                    data: Buffer.from(item.file, 'binary').toString('base64'),  // JSON.stringify(item.file),
+                    postId: post.id
+                }
+            })
+            return imageData;
         },
     }
 }

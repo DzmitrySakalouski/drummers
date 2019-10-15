@@ -5,6 +5,7 @@ import { HomeScreen } from './screens/home';
 import { Index } from './screens/authLoading';
 import { HomeHeader } from './components/homeHeader';
 import { AddPostScreen } from './screens/addPostScreen';
+import { PostScreen } from './screens/post';
 
 const AppStack = createStackNavigator({
     Home: {
@@ -18,6 +19,9 @@ const AppStack = createStackNavigator({
         navigationOptions: {
             title: 'Создать пост',
         }
+    },
+    Post: {
+        screen: PostScreen
     }
 });
 const AuthStack = createStackNavigator({ 

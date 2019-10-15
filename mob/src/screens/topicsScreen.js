@@ -11,6 +11,7 @@ const GET_TOPICS = gql`
         name
         description
         postsForCard {
+            id
             name
             createdAt
             user {
@@ -31,9 +32,9 @@ export function TopicsScreen(props) {
     }
 
     return (
-        !loading && <View>
+        <View>
             {
-                data && data.topics && data.topics.map((item, i) => <TopicCard openAddPostForm={openAddPostForm} key={i.toString()} {...item} />)
+                data && data.topics && data.topics.map((item, i) => <TopicCard openAddPostForm={openAddPostForm} key={i.toString()} {...item} navigation={props.navigation} />)
             }
         </View>
     );

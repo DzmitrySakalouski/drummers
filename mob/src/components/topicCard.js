@@ -27,7 +27,7 @@ export function TopicCard(props) {
             image={{uri: 'http://content.onliner.by/forum/531/e84/1307241/800x800/6e555a1e4ebabe84deafb6cd1f337c70.jpg'}}
             title={renderTitle()}
         >
-            <TopicCardPosts posts={props.postsForCard}/>
+            <TopicCardPosts posts={props.postsForCard} navigation={props.navigation} />
             <Button buttonStyle={styles.cardBtn} title="Eщё..."/>
         </Card>
     );

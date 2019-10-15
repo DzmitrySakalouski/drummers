@@ -19,6 +19,10 @@ export function TopicCardPosts(props) {
         );
     }
 
+    const goToPostScreen = id => {
+        props.navigation.navigate('Post', { postId: id })
+    }
+
     return (
         <View>
             {
@@ -31,6 +35,7 @@ export function TopicCardPosts(props) {
                         titleStyle={styles.title}
                         leftIcon={{ name: 'check-circle', color: 'black' }}
                         bottomDivider
+                        onPress={() => goToPostScreen(item.id)}
                     />))
             }
         </View>

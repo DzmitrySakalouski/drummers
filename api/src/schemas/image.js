@@ -1,7 +1,10 @@
 import { gql } from 'apollo-server-express';
 export default gql`
+extend type Query {
+  images: [Image!]
+}
   type Image {
-    file: String!
+    file: String
     postId: String!
   }
   extend type Mutation {
